@@ -1,0 +1,12 @@
+SOS Copter — In Hoc Signo Ludimus · criado por Rodrigo Torquato Mazzoli
+
+Assets de terceiros (todos CC0 / domínio público; crédito não obrigatório, mas dado com gosto):
+- Car Kit 3.1, City Kit Commercial 2.1, City Kit Suburban 2.0, City Kit Roads 2.2 — Kenney (www.kenney.nl)
+- Ultimate Nature Pack (coqueiros) e Animated Human (pedestres) — Quaternius (quaternius.com)
+- Helicopter Sounds (rotor) — aquinn, OpenGameArt.org
+Bibliotecas: three.js r128 (MIT); fontes Archivo, Archivo Black, Press Start 2P, Cinzel, Cormorant Garamond (SIL OFL).
+
+Cidades do modo história (SimCity 2000, .sc2): DiabloVille, Sea Cliff, Islandtown, Cypress, Lanville, CatNip Cove, Treeton e Keithly — criadas por Darkwolf. Obrigado, Darkwolf!
+Leitura do formato .sc2 baseada na especificação aberta do projeto OpenCity2k (SC2k-docs, CC BY-SA 4.0). SimCity 2000 e SimCopter são marcas da Maxis/Electronic Arts; este é um projeto de estudo sem fins comerciais.
+
+HUD de cabine para PC (v2, módulos nos cantos): arte original gerada por código por Ludimus para o SOS Copter. Fontes VT323 e Barlow Condensed (SIL OFL).

@@ -1,0 +1,13 @@
+# chaves e builds do APK (nunca subir)
+*.keystore
+*.jks
+android/build/
+*.apk
+*.aab
+# pacotes brutos de assets e arquivos temporários
+assets_src/
+*.zip
+.DS_Store
+Thumbs.db
+node_modules/
+__pycache__/

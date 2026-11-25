@@ -1,0 +1,1099 @@
+{
+ "meta": {
+  "version": "v2 (modulos nas bordas)",
+  "reuses_v1": [
+   "themes/<t>/Nx/btn_*",
+   "common/Nx/lamp_*",
+   "themes/<t>/Nx/radio_screen + radio_tx_on",
+   "themes/<t>/Nx/heading_tape"
+  ],
+  "angle_convention": "0 grau = para cima, horario positivo",
+  "themes": {
+   "rescue": {
+    "name": "Rescue Red",
+    "helicopters": [
+     "schwaiter",
+     "bel213",
+     "delfim",
+     "md525"
+    ],
+    "accent": "#e2231a",
+    "stripe": "#f4f1ea",
+    "panel": "#3a3633",
+    "lcd": "#ffb43a"
+   },
+   "sky": {
+    "name": "Sky Patrol Blue",
+    "helicopters": [
+     "jetrider",
+     "a110"
+    ],
+    "accent": "#1f6fd0",
+    "stripe": "#f4f1ea",
+    "panel": "#2a3442",
+    "lcd": "#7fd4ff"
+   },
+   "gold": {
+    "name": "Night Gold",
+    "helicopters": [
+     "md505",
+     "explorador"
+    ],
+    "accent": "#ffcc1f",
+    "stripe": "#14202c",
+    "panel": "#22262e",
+    "lcd": "#ffd65a"
+   },
+   "olive": {
+    "name": "Olive Drab (bonus)",
+    "helicopters": [
+     "apaxe"
+    ],
+    "accent": "#8a9a5b",
+    "stripe": "#1e211a",
+    "panel": "#353b2c",
+    "lcd": "#7dff6a"
+   }
+  }
+ },
+ "sprites": [
+  {
+   "id": "v2_needle_long",
+   "theme": "common",
+   "file_1x": "v2/common/1x/needle_long.png",
+   "file_2x": "v2/common/2x/needle_long.png",
+   "size_1x": [
+    11,
+    51
+   ],
+   "use": "agulha grande dos mostradores v2 (velocimetro, altimetro 100 m/volta)",
+   "pivot_1x": [
+    5.5,
+    43.2
+   ]
+  },
+  {
+   "id": "v2_needle_short",
+   "theme": "common",
+   "file_1x": "v2/common/1x/needle_short.png",
+   "file_2x": "v2/common/2x/needle_short.png",
+   "size_1x": [
+    12,
+    36
+   ],
+   "use": "agulha curta do altimetro v2 (1000 m/volta)",
+   "pivot_1x": [
+    6.0,
+    29.6
+   ]
+  },
+  {
+   "id": "v2_horizon_disc",
+   "theme": "common",
+   "file_1x": "v2/common/1x/horizon_disc.png",
+   "file_2x": "v2/common/2x/horizon_disc.png",
+   "size_1x": [
+    112,
+    320
+   ],
+   "use": "disco do horizonte v2: clip circular raio 49, gire -roll, desloque pitch*3 px; limite +-35 graus",
+   "pivot_1x": [
+    56,
+    160
+   ],
+   "px_per_degree_1x": 3,
+   "pitch_limit_deg": 35
+  },
+  {
+   "id": "v2_horizon_aircraft",
+   "theme": "common",
+   "file_1x": "v2/common/1x/horizon_aircraft.png",
+   "file_2x": "v2/common/2x/horizon_aircraft.png",
+   "size_1x": [
+    88,
+    24
+   ],
+   "use": "simbolo fixo do aviao (centro do horizonte v2)",
+   "pivot_1x": [
+    44,
+    12
+   ]
+  },
+  {
+   "id": "v2_minimap_mask",
+   "theme": "common",
+   "file_1x": "v2/common/1x/minimap_mask.png",
+   "file_2x": "v2/common/2x/minimap_mask.png",
+   "size_1x": [
+    176,
+    176
+   ],
+   "use": "mascara do minimapa (quadrado arredondado 176x176, raio 16)"
+  },
+  {
+   "id": "v2_minimap_player",
+   "theme": "common",
+   "file_1x": "v2/common/1x/minimap_player.png",
+   "file_2x": "v2/common/2x/minimap_player.png",
+   "size_1x": [
+    16,
+    18
+   ],
+   "use": "seta do jogador no minimapa; gire pelo rumo",
+   "pivot_1x": [
+    8,
+    10
+   ]
+  },
+  {
+   "id": "v2_bar_fill_fuel",
+   "theme": "common",
+   "file_1x": "v2/common/1x/bar_fill_fuel.png",
+   "file_2x": "v2/common/2x/bar_fill_fuel.png",
+   "size_1x": [
+    12,
+    84
+   ],
+   "use": "enchimento segmentado da barra FUEL: recorte DE BAIXO para cima pela fracao (altura*frac) e desenhe em (bar.x+7, bar.y+6+84-altura*frac)"
+  },
+  {
+   "id": "v2_bar_fill_damage",
+   "theme": "common",
+   "file_1x": "v2/common/1x/bar_fill_damage.png",
+   "file_2x": "v2/common/2x/bar_fill_damage.png",
+   "size_1x": [
+    12,
+    84
+   ],
+   "use": "enchimento segmentado da barra DAMAGE: recorte DE BAIXO para cima pela fracao (altura*frac) e desenhe em (bar.x+7, bar.y+6+84-altura*frac)"
+  },
+  {
+   "id": "v2_bar_fill_water",
+   "theme": "common",
+   "file_1x": "v2/common/1x/bar_fill_water.png",
+   "file_2x": "v2/common/2x/bar_fill_water.png",
+   "size_1x": [
+    12,
+    84
+   ],
+   "use": "enchimento segmentado da barra WATER: recorte DE BAIXO para cima pela fracao (altura*frac) e desenhe em (bar.x+7, bar.y+6+84-altura*frac)"
+  },
+  {
+   "id": "v2_pod_flight",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/pod_flight.png",
+   "file_2x": "v2/themes/rescue/2x/pod_flight.png",
+   "size_1x": [
+    480,
+    160
+   ],
+   "use": "modulo de voo (canto inferior direito): pocos das 3 barras e dos 3 mostradores"
+  },
+  {
+   "id": "v2_status_bar",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/status_bar.png",
+   "file_2x": "v2/themes/rescue/2x/status_bar.png",
+   "size_1x": [
+    456,
+    40
+   ],
+   "use": "barra acima do modulo de voo: fita da bussola (janela 34,9-300,35) e dinheiro (318,9-446,35)"
+  },
+  {
+   "id": "v2_heading_lubber",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/heading_lubber.png",
+   "file_2x": "v2/themes/rescue/2x/heading_lubber.png",
+   "size_1x": [
+    250,
+    30
+   ],
+   "use": "marcador central da bussola, por cima da fita"
+  },
+  {
+   "id": "v2_tools_plate",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/tools_plate.png",
+   "file_2x": "v2/themes/rescue/2x/tools_plate.png",
+   "size_1x": [
+    288,
+    154
+   ],
+   "use": "fundo do painel de ferramentas (canto superior direito), recebe os 12 botoes v1"
+  },
+  {
+   "id": "v2_caution_plate",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/caution_plate.png",
+   "file_2x": "v2/themes/rescue/2x/caution_plate.png",
+   "size_1x": [
+    288,
+    76
+   ],
+   "use": "fundo das 8 luzes de aviso v1"
+  },
+  {
+   "id": "v2_tools_tab",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/tools_tab.png",
+   "file_2x": "v2/themes/rescue/2x/tools_tab.png",
+   "size_1x": [
+    288,
+    26
+   ],
+   "use": "painel de ferramentas RECOLHIDO (aba 288x26). Sugestao: segurar Tab abre; luzes sobem para y = tools.y + 34"
+  },
+  {
+   "id": "v2_minimap_frame",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/minimap_frame.png",
+   "file_2x": "v2/themes/rescue/2x/minimap_frame.png",
+   "size_1x": [
+    200,
+    204
+   ],
+   "use": "moldura do minimapa (canto inferior esquerdo); janela transparente 176x176 em (12,20)"
+  },
+  {
+   "id": "v2_mission_plate",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/mission_plate.png",
+   "file_2x": "v2/themes/rescue/2x/mission_plate.png",
+   "size_1x": [
+    200,
+    30
+   ],
+   "use": "etiqueta MISSION acima do minimapa; texto LCD em (68,7)-(180,23)"
+  },
+  {
+   "id": "v2_gauge_airspeed",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/gauge_airspeed.png",
+   "file_2x": "v2/themes/rescue/2x/gauge_airspeed.png",
+   "size_1x": [
+    112,
+    112
+   ],
+   "use": "velocimetro v2 (112 px). Agulha: -135 + 270*kmh/350",
+   "needle_pivot_1x": [
+    56.0,
+    56.0
+   ]
+  },
+  {
+   "id": "v2_gauge_altimeter",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/gauge_altimeter.png",
+   "file_2x": "v2/themes/rescue/2x/gauge_altimeter.png",
+   "size_1x": [
+    112,
+    112
+   ],
+   "use": "altimetro AGL v2 (112 px), x10 m",
+   "needle_pivot_1x": [
+    56.0,
+    56.0
+   ]
+  },
+  {
+   "id": "v2_horizon_bezel",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/horizon_bezel.png",
+   "file_2x": "v2/themes/rescue/2x/horizon_bezel.png",
+   "size_1x": [
+    136,
+    136
+   ],
+   "use": "aro do horizonte v2 (136 px), janela transparente raio ~49",
+   "needle_pivot_1x": [
+    68.0,
+    68.0
+   ]
+  },
+  {
+   "id": "v2_bar_fuel",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/bar_fuel.png",
+   "file_2x": "v2/themes/rescue/2x/bar_fuel.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra FUEL (fundo); desenhe o enchimento por cima"
+  },
+  {
+   "id": "v2_bar_damage",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/bar_damage.png",
+   "file_2x": "v2/themes/rescue/2x/bar_damage.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra DAMAGE (fundo); desenhe o enchimento por cima"
+  },
+  {
+   "id": "v2_bar_water",
+   "theme": "rescue",
+   "file_1x": "v2/themes/rescue/1x/bar_water.png",
+   "file_2x": "v2/themes/rescue/2x/bar_water.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra WATER (fundo); desenhe o enchimento por cima"
+  },
+  {
+   "id": "v2_pod_flight",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/pod_flight.png",
+   "file_2x": "v2/themes/sky/2x/pod_flight.png",
+   "size_1x": [
+    480,
+    160
+   ],
+   "use": "modulo de voo (canto inferior direito): pocos das 3 barras e dos 3 mostradores"
+  },
+  {
+   "id": "v2_status_bar",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/status_bar.png",
+   "file_2x": "v2/themes/sky/2x/status_bar.png",
+   "size_1x": [
+    456,
+    40
+   ],
+   "use": "barra acima do modulo de voo: fita da bussola (janela 34,9-300,35) e dinheiro (318,9-446,35)"
+  },
+  {
+   "id": "v2_heading_lubber",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/heading_lubber.png",
+   "file_2x": "v2/themes/sky/2x/heading_lubber.png",
+   "size_1x": [
+    250,
+    30
+   ],
+   "use": "marcador central da bussola, por cima da fita"
+  },
+  {
+   "id": "v2_tools_plate",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/tools_plate.png",
+   "file_2x": "v2/themes/sky/2x/tools_plate.png",
+   "size_1x": [
+    288,
+    154
+   ],
+   "use": "fundo do painel de ferramentas (canto superior direito), recebe os 12 botoes v1"
+  },
+  {
+   "id": "v2_caution_plate",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/caution_plate.png",
+   "file_2x": "v2/themes/sky/2x/caution_plate.png",
+   "size_1x": [
+    288,
+    76
+   ],
+   "use": "fundo das 8 luzes de aviso v1"
+  },
+  {
+   "id": "v2_tools_tab",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/tools_tab.png",
+   "file_2x": "v2/themes/sky/2x/tools_tab.png",
+   "size_1x": [
+    288,
+    26
+   ],
+   "use": "painel de ferramentas RECOLHIDO (aba 288x26). Sugestao: segurar Tab abre; luzes sobem para y = tools.y + 34"
+  },
+  {
+   "id": "v2_minimap_frame",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/minimap_frame.png",
+   "file_2x": "v2/themes/sky/2x/minimap_frame.png",
+   "size_1x": [
+    200,
+    204
+   ],
+   "use": "moldura do minimapa (canto inferior esquerdo); janela transparente 176x176 em (12,20)"
+  },
+  {
+   "id": "v2_mission_plate",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/mission_plate.png",
+   "file_2x": "v2/themes/sky/2x/mission_plate.png",
+   "size_1x": [
+    200,
+    30
+   ],
+   "use": "etiqueta MISSION acima do minimapa; texto LCD em (68,7)-(180,23)"
+  },
+  {
+   "id": "v2_gauge_airspeed",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/gauge_airspeed.png",
+   "file_2x": "v2/themes/sky/2x/gauge_airspeed.png",
+   "size_1x": [
+    112,
+    112
+   ],
+   "use": "velocimetro v2 (112 px). Agulha: -135 + 270*kmh/350",
+   "needle_pivot_1x": [
+    56.0,
+    56.0
+   ]
+  },
+  {
+   "id": "v2_gauge_altimeter",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/gauge_altimeter.png",
+   "file_2x": "v2/themes/sky/2x/gauge_altimeter.png",
+   "size_1x": [
+    112,
+    112
+   ],
+   "use": "altimetro AGL v2 (112 px), x10 m",
+   "needle_pivot_1x": [
+    56.0,
+    56.0
+   ]
+  },
+  {
+   "id": "v2_horizon_bezel",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/horizon_bezel.png",
+   "file_2x": "v2/themes/sky/2x/horizon_bezel.png",
+   "size_1x": [
+    136,
+    136
+   ],
+   "use": "aro do horizonte v2 (136 px), janela transparente raio ~49",
+   "needle_pivot_1x": [
+    68.0,
+    68.0
+   ]
+  },
+  {
+   "id": "v2_bar_fuel",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/bar_fuel.png",
+   "file_2x": "v2/themes/sky/2x/bar_fuel.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra FUEL (fundo); desenhe o enchimento por cima"
+  },
+  {
+   "id": "v2_bar_damage",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/bar_damage.png",
+   "file_2x": "v2/themes/sky/2x/bar_damage.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra DAMAGE (fundo); desenhe o enchimento por cima"
+  },
+  {
+   "id": "v2_bar_water",
+   "theme": "sky",
+   "file_1x": "v2/themes/sky/1x/bar_water.png",
+   "file_2x": "v2/themes/sky/2x/bar_water.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra WATER (fundo); desenhe o enchimento por cima"
+  },
+  {
+   "id": "v2_pod_flight",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/pod_flight.png",
+   "file_2x": "v2/themes/gold/2x/pod_flight.png",
+   "size_1x": [
+    480,
+    160
+   ],
+   "use": "modulo de voo (canto inferior direito): pocos das 3 barras e dos 3 mostradores"
+  },
+  {
+   "id": "v2_status_bar",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/status_bar.png",
+   "file_2x": "v2/themes/gold/2x/status_bar.png",
+   "size_1x": [
+    456,
+    40
+   ],
+   "use": "barra acima do modulo de voo: fita da bussola (janela 34,9-300,35) e dinheiro (318,9-446,35)"
+  },
+  {
+   "id": "v2_heading_lubber",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/heading_lubber.png",
+   "file_2x": "v2/themes/gold/2x/heading_lubber.png",
+   "size_1x": [
+    250,
+    30
+   ],
+   "use": "marcador central da bussola, por cima da fita"
+  },
+  {
+   "id": "v2_tools_plate",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/tools_plate.png",
+   "file_2x": "v2/themes/gold/2x/tools_plate.png",
+   "size_1x": [
+    288,
+    154
+   ],
+   "use": "fundo do painel de ferramentas (canto superior direito), recebe os 12 botoes v1"
+  },
+  {
+   "id": "v2_caution_plate",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/caution_plate.png",
+   "file_2x": "v2/themes/gold/2x/caution_plate.png",
+   "size_1x": [
+    288,
+    76
+   ],
+   "use": "fundo das 8 luzes de aviso v1"
+  },
+  {
+   "id": "v2_tools_tab",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/tools_tab.png",
+   "file_2x": "v2/themes/gold/2x/tools_tab.png",
+   "size_1x": [
+    288,
+    26
+   ],
+   "use": "painel de ferramentas RECOLHIDO (aba 288x26). Sugestao: segurar Tab abre; luzes sobem para y = tools.y + 34"
+  },
+  {
+   "id": "v2_minimap_frame",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/minimap_frame.png",
+   "file_2x": "v2/themes/gold/2x/minimap_frame.png",
+   "size_1x": [
+    200,
+    204
+   ],
+   "use": "moldura do minimapa (canto inferior esquerdo); janela transparente 176x176 em (12,20)"
+  },
+  {
+   "id": "v2_mission_plate",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/mission_plate.png",
+   "file_2x": "v2/themes/gold/2x/mission_plate.png",
+   "size_1x": [
+    200,
+    30
+   ],
+   "use": "etiqueta MISSION acima do minimapa; texto LCD em (68,7)-(180,23)"
+  },
+  {
+   "id": "v2_gauge_airspeed",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/gauge_airspeed.png",
+   "file_2x": "v2/themes/gold/2x/gauge_airspeed.png",
+   "size_1x": [
+    112,
+    112
+   ],
+   "use": "velocimetro v2 (112 px). Agulha: -135 + 270*kmh/350",
+   "needle_pivot_1x": [
+    56.0,
+    56.0
+   ]
+  },
+  {
+   "id": "v2_gauge_altimeter",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/gauge_altimeter.png",
+   "file_2x": "v2/themes/gold/2x/gauge_altimeter.png",
+   "size_1x": [
+    112,
+    112
+   ],
+   "use": "altimetro AGL v2 (112 px), x10 m",
+   "needle_pivot_1x": [
+    56.0,
+    56.0
+   ]
+  },
+  {
+   "id": "v2_horizon_bezel",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/horizon_bezel.png",
+   "file_2x": "v2/themes/gold/2x/horizon_bezel.png",
+   "size_1x": [
+    136,
+    136
+   ],
+   "use": "aro do horizonte v2 (136 px), janela transparente raio ~49",
+   "needle_pivot_1x": [
+    68.0,
+    68.0
+   ]
+  },
+  {
+   "id": "v2_bar_fuel",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/bar_fuel.png",
+   "file_2x": "v2/themes/gold/2x/bar_fuel.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra FUEL (fundo); desenhe o enchimento por cima"
+  },
+  {
+   "id": "v2_bar_damage",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/bar_damage.png",
+   "file_2x": "v2/themes/gold/2x/bar_damage.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra DAMAGE (fundo); desenhe o enchimento por cima"
+  },
+  {
+   "id": "v2_bar_water",
+   "theme": "gold",
+   "file_1x": "v2/themes/gold/1x/bar_water.png",
+   "file_2x": "v2/themes/gold/2x/bar_water.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra WATER (fundo); desenhe o enchimento por cima"
+  },
+  {
+   "id": "v2_pod_flight",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/pod_flight.png",
+   "file_2x": "v2/themes/olive/2x/pod_flight.png",
+   "size_1x": [
+    480,
+    160
+   ],
+   "use": "modulo de voo (canto inferior direito): pocos das 3 barras e dos 3 mostradores"
+  },
+  {
+   "id": "v2_status_bar",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/status_bar.png",
+   "file_2x": "v2/themes/olive/2x/status_bar.png",
+   "size_1x": [
+    456,
+    40
+   ],
+   "use": "barra acima do modulo de voo: fita da bussola (janela 34,9-300,35) e dinheiro (318,9-446,35)"
+  },
+  {
+   "id": "v2_heading_lubber",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/heading_lubber.png",
+   "file_2x": "v2/themes/olive/2x/heading_lubber.png",
+   "size_1x": [
+    250,
+    30
+   ],
+   "use": "marcador central da bussola, por cima da fita"
+  },
+  {
+   "id": "v2_tools_plate",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/tools_plate.png",
+   "file_2x": "v2/themes/olive/2x/tools_plate.png",
+   "size_1x": [
+    288,
+    154
+   ],
+   "use": "fundo do painel de ferramentas (canto superior direito), recebe os 12 botoes v1"
+  },
+  {
+   "id": "v2_caution_plate",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/caution_plate.png",
+   "file_2x": "v2/themes/olive/2x/caution_plate.png",
+   "size_1x": [
+    288,
+    76
+   ],
+   "use": "fundo das 8 luzes de aviso v1"
+  },
+  {
+   "id": "v2_tools_tab",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/tools_tab.png",
+   "file_2x": "v2/themes/olive/2x/tools_tab.png",
+   "size_1x": [
+    288,
+    26
+   ],
+   "use": "painel de ferramentas RECOLHIDO (aba 288x26). Sugestao: segurar Tab abre; luzes sobem para y = tools.y + 34"
+  },
+  {
+   "id": "v2_minimap_frame",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/minimap_frame.png",
+   "file_2x": "v2/themes/olive/2x/minimap_frame.png",
+   "size_1x": [
+    200,
+    204
+   ],
+   "use": "moldura do minimapa (canto inferior esquerdo); janela transparente 176x176 em (12,20)"
+  },
+  {
+   "id": "v2_mission_plate",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/mission_plate.png",
+   "file_2x": "v2/themes/olive/2x/mission_plate.png",
+   "size_1x": [
+    200,
+    30
+   ],
+   "use": "etiqueta MISSION acima do minimapa; texto LCD em (68,7)-(180,23)"
+  },
+  {
+   "id": "v2_gauge_airspeed",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/gauge_airspeed.png",
+   "file_2x": "v2/themes/olive/2x/gauge_airspeed.png",
+   "size_1x": [
+    112,
+    112
+   ],
+   "use": "velocimetro v2 (112 px). Agulha: -135 + 270*kmh/350",
+   "needle_pivot_1x": [
+    56.0,
+    56.0
+   ]
+  },
+  {
+   "id": "v2_gauge_altimeter",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/gauge_altimeter.png",
+   "file_2x": "v2/themes/olive/2x/gauge_altimeter.png",
+   "size_1x": [
+    112,
+    112
+   ],
+   "use": "altimetro AGL v2 (112 px), x10 m",
+   "needle_pivot_1x": [
+    56.0,
+    56.0
+   ]
+  },
+  {
+   "id": "v2_horizon_bezel",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/horizon_bezel.png",
+   "file_2x": "v2/themes/olive/2x/horizon_bezel.png",
+   "size_1x": [
+    136,
+    136
+   ],
+   "use": "aro do horizonte v2 (136 px), janela transparente raio ~49",
+   "needle_pivot_1x": [
+    68.0,
+    68.0
+   ]
+  },
+  {
+   "id": "v2_bar_fuel",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/bar_fuel.png",
+   "file_2x": "v2/themes/olive/2x/bar_fuel.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra FUEL (fundo); desenhe o enchimento por cima"
+  },
+  {
+   "id": "v2_bar_damage",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/bar_damage.png",
+   "file_2x": "v2/themes/olive/2x/bar_damage.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra DAMAGE (fundo); desenhe o enchimento por cima"
+  },
+  {
+   "id": "v2_bar_water",
+   "theme": "olive",
+   "file_1x": "v2/themes/olive/1x/bar_water.png",
+   "file_2x": "v2/themes/olive/2x/bar_water.png",
+   "size_1x": [
+    26,
+    110
+   ],
+   "use": "tubo da barra WATER (fundo); desenhe o enchimento por cima"
+  }
+ ],
+ "layout": {
+  "screen": [
+   1280,
+   800
+  ],
+  "margin": 12,
+  "pod_flight": {
+   "x": 788,
+   "y": 628,
+   "w": 480,
+   "h": 160
+  },
+  "status_bar": {
+   "x": 812,
+   "y": 584,
+   "w": 456,
+   "h": 40
+  },
+  "minimap_frame": {
+   "x": 12,
+   "y": 584,
+   "w": 200,
+   "h": 204
+  },
+  "minimap_window": {
+   "x": 24,
+   "y": 604,
+   "w": 176,
+   "h": 176
+  },
+  "mission_plate": {
+   "x": 12,
+   "y": 550,
+   "w": 200,
+   "h": 30
+  },
+  "radio_screen": {
+   "x": 986,
+   "y": 12,
+   "w": 276,
+   "h": 124
+  },
+  "tools_plate": {
+   "x": 980,
+   "y": 144,
+   "w": 288,
+   "h": 154
+  },
+  "caution_plate": {
+   "x": 980,
+   "y": 306,
+   "w": 288,
+   "h": 76
+  },
+  "dials_center": {
+   "airspeed": [
+    942,
+    716
+   ],
+   "horizon": [
+    1072,
+    716
+   ],
+   "altimeter": [
+    1202,
+    716
+   ]
+  },
+  "horizon_window_radius": 49,
+  "bars": [
+   {
+    "id": "fuel",
+    "x": 798,
+    "y": 662,
+    "w": 26,
+    "h": 110
+   },
+   {
+    "id": "damage",
+    "x": 826,
+    "y": 662,
+    "w": 26,
+    "h": 110
+   },
+   {
+    "id": "water",
+    "x": 854,
+    "y": 662,
+    "w": 26,
+    "h": 110
+   }
+  ],
+  "heading_tape_view": {
+   "x": 850,
+   "y": 596,
+   "w": 258,
+   "h": 20,
+   "src_y": 3
+  },
+  "heading_lubber": {
+   "x": 854,
+   "y": 591
+  },
+  "money_text_center": [
+   1194,
+   606.5
+  ],
+  "buttons": [
+   {
+    "id": "water",
+    "x": 987,
+    "y": 168,
+    "w": 66,
+    "h": 40
+   },
+   {
+    "id": "spot",
+    "x": 1056,
+    "y": 168,
+    "w": 66,
+    "h": 40
+   },
+   {
+    "id": "speaker",
+    "x": 1125,
+    "y": 168,
+    "w": 66,
+    "h": 40
+   },
+   {
+    "id": "gas",
+    "x": 1194,
+    "y": 168,
+    "w": 66,
+    "h": 40
+   },
+   {
+    "id": "backup",
+    "x": 987,
+    "y": 210,
+    "w": 66,
+    "h": 40
+   },
+   {
+    "id": "engine",
+    "x": 1056,
+    "y": 210,
+    "w": 66,
+    "h": 40
+   },
+   {
+    "id": "camera",
+    "x": 1125,
+    "y": 210,
+    "w": 66,
+    "h": 40
+   },
+   {
+    "id": "hangar",
+    "x": 1194,
+    "y": 210,
+    "w": 66,
+    "h": 40
+   },
+   {
+    "id": "accept",
+    "x": 987,
+    "y": 252,
+    "w": 66,
+    "h": 40
+   },
+   {
+    "id": "decline",
+    "x": 1056,
+    "y": 252,
+    "w": 66,
+    "h": 40
+   },
+   {
+    "id": "pause",
+    "x": 1125,
+    "y": 252,
+    "w": 66,
+    "h": 40
+   },
+   {
+    "id": "sound",
+    "x": 1194,
+    "y": 252,
+    "w": 66,
+    "h": 40
+   }
+  ],
+  "lamps": [
+   {
+    "id": "engine",
+    "x": 989,
+    "y": 328,
+    "w": 64,
+    "h": 26
+   },
+   {
+    "id": "rotor",
+    "x": 1057,
+    "y": 328,
+    "w": 64,
+    "h": 26
+   },
+   {
+    "id": "low_fuel",
+    "x": 1125,
+    "y": 328,
+    "w": 64,
+    "h": 26
+   },
+   {
+    "id": "damage",
+    "x": 1193,
+    "y": 328,
+    "w": 64,
+    "h": 26
+   },
+   {
+    "id": "overload",
+    "x": 989,
+    "y": 353,
+    "w": 64,
+    "h": 26
+   },
+   {
+    "id": "water",
+    "x": 1057,
+    "y": 353,
+    "w": 64,
+    "h": 26
+   },
+   {
+    "id": "spot",
+    "x": 1125,
+    "y": 353,
+    "w": 64,
+    "h": 26
+   },
+   {
+    "id": "landing",
+    "x": 1193,
+    "y": 353,
+    "w": 64,
+    "h": 26
+   }
+  ],
+  "anchoring": "modulos presos aos cantos: minimapa/missao = inferior esquerdo; voo/status = inferior direito; radio/ferramentas/avisos = superior direito. Em telas maiores, mantenha a distancia da borda e escale pelo menor lado."
+ }
+}

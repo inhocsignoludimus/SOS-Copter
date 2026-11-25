@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>SOS Copter</title>
+<link rel="icon" href="img/icon-192.png"><link rel="apple-touch-icon" href="img/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0a0e16">
+<style>@font-face{font-family:'Archivo';font-weight:400;font-display:swap;src:url(fonts/archivo-latin-400-normal.woff2) format('woff2')}@font-face{font-family:'Archivo';font-weight:600;font-display:swap;src:url(fonts/archivo-latin-600-normal.woff2) format('woff2')}@font-face{font-family:'Archivo';font-weight:700;font-display:swap;src:url(fonts/archivo-latin-700-normal.woff2) format('woff2')}@font-face{font-family:'Archivo Black';font-weight:400;font-display:swap;src:url(fonts/archivo-black-latin-400-normal.woff2) format('woff2')}@font-face{font-family:'Press Start 2P';font-weight:400;font-display:swap;src:url(fonts/press-start-2p-latin-400-normal.woff2) format('woff2')}</style>
+<style>
+/* VOICE: arcade de resgate dos anos 90, ensolarado e bem-humorado
+   IDEA: painel de um helicóptero de bombeiros sobrevoando o Recife
+   PICTURE: o próprio jogo 3D em tela cheia, com painel de instrumentos de verdade
+   COLOUR and TYPE: vermelho-bombeiro #e2231a, amarelo-sinal #ffcc1f, azul-mar #0b6fa4; Archivo Black + Archivo
+   LAYOUT: jogo em tela cheia, HUD nos cantos, painel embaixo, manches de toque no celular */
+:root{color-scheme:light dark;--red:#e2231a;--yel:#ffcc1f;--sea:#0b6fa4;--panel:rgba(12,20,30,.76)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;height:100%;overflow:hidden;background:#0d1633;font:15px/1.4 Archivo,system-ui,sans-serif;color:#fff;-webkit-user-select:none;user-select:none;touch-action:none}
+#game{position:fixed;inset:0}
+.pn{position:absolute;background:var(--panel);border-radius:12px;padding:10px 12px;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+#hud[hidden]{display:none}
+.tl{top:12px;left:12px;width:210px}
+#money{font:24px/1.1 "Archivo Black",sans-serif;color:var(--yel)}
+.sub{font-size:13px;opacity:.9}
+.rb{height:5px;background:rgba(255,255,255,.18);border-radius:3px;margin:5px 0 4px;overflow:hidden}.rb i{display:block;height:100%;background:var(--yel)}
+#svc{color:var(--yel);font-weight:700;font-size:13px;min-height:1em}
+.mission{top:12px;left:50%;transform:translateX(-50%);width:min(440px,calc(100vw - 460px));min-width:260px;text-align:center}
+#mTitle{font:17px/1.2 "Archivo Black",sans-serif}
+#mDesc{font-size:14px;opacity:.92;margin-top:3px;text-wrap:balance}
+.bar{height:7px;background:rgba(255,255,255,.18);border-radius:4px;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--yel)}
+.nav{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:6px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;min-height:26px}
+#arrow{width:26px;height:26px}
+.tr{top:12px;right:12px;padding:6px}#mini{display:block;width:180px;height:180px;border-radius:8px}
+#radio{left:12px;top:150px;width:300px;font-size:13px;padding:8px 10px}
+#radio h4{margin:0 0 4px;font:12px "Archivo Black",sans-serif;color:var(--yel)}
+.rl{margin:0 0 4px}.rl b{color:#9fb0c0;font-weight:700;margin-right:4px}.rl.old{opacity:.55;font-size:12px}.rl.alerta{color:#ff9a8a}.rl.win{color:#bff0a8}.rl.chamada{color:#fff3c4}
+#offerBtns{display:flex;gap:6px;margin-top:6px}#offerBtns[hidden]{display:none}
+#offerBtns button{flex:1;min-height:40px;border:0;border-radius:8px;font:700 13px Archivo,sans-serif;background:var(--yel);color:#14202c;cursor:pointer}
+#offerBtns button#dec{background:#3a4450;color:#fff}#offerBtns button:disabled{opacity:.5}
+#panel{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:min(640px,calc(100vw - 24px));aspect-ratio:640/124;min-width:320px}
+#hotbar{position:absolute;right:12px;top:206px;display:grid;grid-template-columns:repeat(2,auto);gap:6px}
+#hotbar button{min-width:112px;min-height:38px;border:0;border-radius:9px;background:var(--panel);color:#fff;font:700 13px Archivo,sans-serif;text-align:left;padding:6px 10px;cursor:pointer}
+#hotbar button kbd{font:700 11px Archivo,sans-serif;background:#fff;color:#14202c;border-radius:4px;padding:1px 5px;margin-right:6px}
+#hotbar button.on{background:var(--sea)}#hotbar button.dim{opacity:.45}
+#toast{position:absolute;left:50%;top:32%;transform:translate(-50%,-50%);background:var(--panel);padding:10px 18px;border-radius:10px;font:16px "Archivo Black",sans-serif;opacity:0;transition:opacity .25s;pointer-events:none;text-align:center;max-width:90vw}
+#toast.on{opacity:1}
+/* cabine: moldura e painel maior */
+#cockpit{position:fixed;inset:0;pointer-events:none;display:none;background:
+ linear-gradient(#1a1f26,#1a1f26) top/100% 7% no-repeat,
+ linear-gradient(100deg,#1a1f26 0 6%,transparent 6.2%) left/50% 100% no-repeat,
+ linear-gradient(-100deg,#1a1f26 0 6%,transparent 6.2%) right/50% 100% no-repeat}
+.incab #cockpit{display:block}
+.incab #panel{width:min(900px,calc(100vw - 24px));bottom:0;border-radius:12px 12px 0 0}
+/* toque */
+.stick{display:none}
+.touch .stick{display:block;position:absolute;bottom:22px;width:140px;height:140px;border-radius:50%;background:rgba(12,20,30,.35);border:2px solid rgba(255,255,255,.35)}
+.stick i{position:absolute;left:45px;top:45px;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.85);pointer-events:none}
+.stick span{position:absolute;left:0;right:0;top:-20px;text-align:center;font-size:11px;font-weight:700}
+#sl{left:22px}#sr{right:22px}
+.touch #hotbar{top:auto;bottom:14px;right:172px;grid-template-columns:repeat(3,auto)}.touch #hotbar button{min-width:74px;min-height:44px;padding:4px 8px;text-align:center}.touch #hotbar kbd{display:none}
+.touch #panel{width:min(460px,calc(100vw - 340px));min-width:240px;bottom:auto;top:auto;bottom:120px}
+#gmini{display:none;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:3px}
+@media(max-height:560px){.touch #panel{display:none}.touch .incab #panel,.touch.incab #panel{display:block;bottom:0;top:auto;width:calc(100vw - 360px)}.touch #gmini{display:block}.touch #radio{top:auto;bottom:170px;left:172px;width:calc(100vw - 344px);max-height:90px;overflow:hidden}.touch .rl.old{display:none}.touch .tl #heliName,.touch .tl #clock{display:none}}
+.touch #hotbar button[data-act=KeyP],.touch #hotbar button[data-act=KeyC],.touch #hotbar button[data-act=Enter],.touch #hotbar button.hide{display:none}
+#mobTop{display:none}.touch #mobTop{display:flex;position:absolute;top:108px;right:6px;gap:6px}
+#mobTop button{width:44px;height:44px;border:0;border-radius:50%;background:var(--panel);color:#fff;display:grid;place-items:center}
+@media(max-width:900px){#radio{width:240px;top:140px}.rl.old{display:none}.mission{width:calc(100vw - 460px)}}
+@media(max-width:760px){.mission{top:auto;bottom:auto;top:130px;left:auto;right:12px;transform:none;width:calc(100vw - 260px);min-width:0}#mini{width:110px;height:110px}.tl{width:150px}#money{font-size:18px}#radio{top:200px;width:220px}
+ #panel{display:none}.incab #panel{display:block;min-width:0;width:calc(100vw - 24px)}}
+/* telas */
+#ov{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:linear-gradient(180deg,rgba(11,111,164,.5),rgba(8,20,40,.85));padding:16px;overflow:auto;touch-action:auto}
+#ov[hidden]{display:none}
+.card{width:min(760px,100%);background:#fffdf7;color:#14202c;border-radius:18px;padding:clamp(20px,4vw,34px);box-shadow:0 20px 60px rgba(0,0,0,.4);border-top:10px solid var(--red);-webkit-user-select:text;user-select:text;max-height:calc(100vh - 32px);overflow:auto}
+.card h1{font:clamp(36px,7vw,52px)/1.02 "Archivo Black",sans-serif;margin:0 0 8px;color:var(--red);text-wrap:balance}
+.card h2{font:30px/1.1 "Archivo Black",sans-serif;margin:0 0 10px;color:var(--red)}
+.card h3{font:18px "Archivo Black",sans-serif;margin:18px 0 8px}
+.lead{font-size:17px;max-width:60ch}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.go{font:18px "Archivo Black",sans-serif;background:var(--red);color:#fff;border:0;border-radius:12px;padding:12px 22px;cursor:pointer;min-height:48px}
+.go.alt{background:#14202c}.go.sm{font-size:14px;padding:8px 14px;min-height:40px}.go:disabled{opacity:.4;cursor:not-allowed}
+.go:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
+.small{font-size:14px;opacity:.85}
+.cred{font-size:13px;opacity:.7;margin-top:14px}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px;margin:12px 0}
+.keys kbd{font:700 13px Archivo,sans-serif;background:#14202c;color:#fff;border-radius:6px;padding:2px 8px;white-space:nowrap;justify-self:start}
+.opts{display:grid;gap:12px;margin:12px 0}.opts label{display:grid;gap:4px;font-weight:700;font-size:15px}.opts label.chk{display:flex;align-items:center;gap:8px}
+select,textarea{font:16px Archivo,sans-serif;padding:8px;border-radius:8px;border:2px solid #c9c2b0;width:100%;background:#fff;color:#14202c}
+input[type=range]{width:100%;accent-color:var(--red)}input[type=checkbox]{width:22px;height:22px;accent-color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:10px}
+.hc{border:2px solid #e3dccb;border-radius:12px;padding:12px;display:grid;gap:6px;align-content:start}.hc.cur{border-color:var(--red);background:#fff3ee}
+.hc b{font:16px "Archivo Black",sans-serif}
+.st{display:grid;grid-template-columns:auto 1fr;gap:3px 8px;align-items:center;font-size:12px}.st em{height:7px;background:#e8e1d0;border-radius:4px;overflow:hidden}.st em i{display:block;height:100%;background:var(--red)}
+.tag{font-weight:700;color:var(--red)}
+.hz{height:10px;background:repeating-linear-gradient(45deg,#ffcc1f 0 12px,#14202c 12px 24px);border-radius:4px;margin:-6px 0 14px}
+.pvbox{position:relative;border-radius:12px;overflow:hidden;background:#2a2f36;margin:10px 0}.pvc{display:block;width:100%;height:auto}
+.pvname{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;display:grid;gap:2px}.pvname b{font:20px "Archivo Black",sans-serif}.pvname span{font-size:13px;opacity:.9}
+.hc[data-pv]{cursor:pointer}.hc.sel{box-shadow:0 0 0 3px var(--yel)}
+.sub2{font:20px "Archivo Black",sans-serif;margin:-4px 0 8px;color:#14202c;opacity:.7}
+.opts.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.card h4{font:15px "Archivo Black",sans-serif;margin:14px 0 6px;color:#6a6255}
+.row.tight{margin:4px 0 0;gap:6px}
+/* tela inicial com a arte do jogo */
+#title{position:fixed;inset:0;z-index:20;background:#140b22;overflow:hidden}#title[hidden]{display:none}
+.tsbg{position:absolute;inset:-30px;background:url(img/title.jpg) center/cover;filter:blur(16px) brightness(.5)}
+.ts{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(100vw,177.78vh);aspect-ratio:16/9;--u:1px}
+.ts img{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none}
+.tsb{position:absolute;left:2.9%;width:24%;height:7.6%;border:0;border-radius:calc(var(--u)*5);background:transparent;cursor:pointer;font:calc(var(--u)*23) "Press Start 2P",monospace;color:#f6b622;text-align:left;padding:0 0 0 calc(var(--u)*34);letter-spacing:calc(var(--u)*1);text-shadow:calc(var(--u)*3) calc(var(--u)*3) 0 #2a1600;transition:box-shadow .12s,filter .12s}
+.tsb.paint{background:linear-gradient(#5d5d5d,#3f3f41);box-shadow:inset 0 calc(var(--u)*2) 0 #8a8a8a,inset 0 calc(var(--u)*-3) 0 #222,0 0 0 calc(var(--u)*3) #151515}
+.tsb:hover,.tsb:focus-visible{outline:none;box-shadow:0 0 0 calc(var(--u)*4) #ffcc1f,0 0 calc(var(--u)*24) #ffcc1f88;filter:brightness(1.15)}
+.tsb.paint:hover,.tsb.paint:focus-visible{box-shadow:inset 0 calc(var(--u)*2) 0 #8a8a8a,0 0 0 calc(var(--u)*4) #ffcc1f,0 0 calc(var(--u)*24) #ffcc1f88}
+.tsb .lbl{opacity:0}.tsb.paint .lbl{opacity:1}
+#tsLoad{position:absolute;left:2.9%;top:40%;font:calc(var(--u)*22) "Press Start 2P",monospace;color:#f6b622;text-shadow:3px 3px 0 #2a1600;background:#000a;padding:10px 14px;border-radius:6px}
+#tsLoad[hidden]{display:none}
+.tsCorner{position:fixed;right:12px;bottom:max(12px,env(safe-area-inset-bottom));display:flex;gap:6px;align-items:center;z-index:2}
+.tsCorner button,.tsCorner span{font:11px "Press Start 2P",monospace;color:#f6b622;background:#2b2b2e;border:2px solid #111;border-radius:6px;padding:9px 10px;min-height:38px;cursor:pointer}
+.tsCorner button.on{background:#f6b622;color:#1a1200}.tsCorner span{cursor:default;color:#fff}
+@media (max-aspect-ratio:1/1){.ts{top:0;left:0;transform:none;width:100vw}
+ #tsBtns{position:absolute;left:14px;right:14px;top:calc(100% + 10px);height:calc(100vh - 56.25vw - 80px);display:flex;flex-direction:column;gap:6px;overflow:auto}
+ .tsb{position:static;width:100%;height:auto;flex:1 1 0;min-height:36px;max-height:50px;font-size:12px;letter-spacing:0;padding-left:16px;text-shadow:2px 2px 0 #2a1600;background:linear-gradient(#5d5d5d,#3f3f41);box-shadow:inset 0 2px 0 #8a8a8a,0 0 0 3px #151515}.tsb .lbl{opacity:1}}
+.logo{display:block;width:min(260px,70%);height:auto;margin:-8px 0 10px;border-radius:6px}
+.citylist{display:grid;gap:10px;margin:12px 0}.citybtn{display:grid;gap:4px;text-align:left;border:2px solid #e3dccb;border-radius:12px;padding:12px 14px;background:#fff;cursor:pointer;font:15px Archivo,sans-serif;color:#14202c}
+@media (max-height:500px){#card img.logo{display:none}.maps{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))!important}}
+.maps{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin:8px 0 14px}.mapc{display:grid;gap:3px;text-align:left;border:2px solid #e3dccb;border-radius:12px;padding:8px;background:#fff;cursor:pointer;font:13px Archivo,sans-serif;color:#14202c}
+.mapc img,.mapc .nothumb{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:#2a2a6a}.mapc b{font:15px "Archivo Black",sans-serif}.mapc.lock{opacity:.45;cursor:not-allowed;filter:grayscale(1)}.mapc.done{border-color:#2f9a5a}.mapc:not(.lock):hover{border-color:var(--red)}
+.citybtn b{font:18px "Archivo Black",sans-serif}.citybtn.cur{border-color:var(--red);background:#fff3ee}.citybtn:focus-visible{outline:3px solid var(--yel)}
+.thanks{position:fixed;inset:0;z-index:40;background:#000;display:grid;place-items:center;text-align:center;color:#f6b622;font:16px "Press Start 2P",monospace;padding:20px}
+.thanks p{color:#ddd;font:15px Archivo,sans-serif}
+#seats{display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:4px 0 2px}#seats .sl{font-size:11px;font-weight:700;opacity:.85;margin-right:4px;width:100%}
+#seats i{width:11px;height:13px;border-radius:3px 3px 2px 2px;background:#3a4450;display:block}#seats i.on{background:#ffcc1f;box-shadow:0 0 6px #ffcc1f88}
+.touch #seats .sl{font-size:9.5px}.touch #seats i{width:9px;height:11px}
+#rotHint{position:fixed;inset:0;z-index:35;background:rgba(10,14,22,.94);display:grid;place-content:center;justify-items:center;gap:14px;text-align:center;color:#fff;padding:24px;font:16px Archivo,sans-serif}
+#rotHint[hidden]{display:none}#rotHint p{max-width:280px;margin:0}
+.stats{font:18px/1.6 Archivo,sans-serif;margin:8px 0 18px}.stats b{color:var(--red)}
+
+/* celular: HUD compacto */
+#radio{transition:opacity .4s}.touch #radio.quiet{opacity:0;pointer-events:none}
+@media(max-height:560px),(max-width:700px){
+.touch .pn{padding:5px 8px;border-radius:8px}
+.touch .tl{top:6px;left:6px;width:128px}.touch #money{font-size:15px}.touch .sub,.touch #gmini,.touch #svc{font-size:10px;line-height:1.3}.touch .rb{height:3px;margin:3px 0}
+.touch .mission{top:6px;left:50%;right:auto;transform:translateX(-50%);width:min(330px,calc(100vw - 270px));min-width:0;padding:4px 8px}
+.touch #mTitle{font-size:12px}.touch #mDesc{font-size:10.5px;line-height:1.25;margin-top:1px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.touch .bar{height:3px;margin-top:4px}.touch .nav{min-height:16px;margin-top:2px;font-size:11px;gap:8px}.touch #arrow{width:16px;height:16px}
+.touch .tr{top:6px;right:6px;padding:3px}.touch #mini{width:92px;height:92px}
+.touch #radio{top:auto;bottom:62px;left:50%;transform:translateX(-50%);width:min(380px,calc(100vw - 260px));max-height:none;padding:4px 8px;font-size:10.5px}
+.touch #radio h4{display:none}.touch .rl{margin:0}.touch .rl.old{display:none}.touch #offerBtns{margin-top:4px}.touch #offerBtns button{min-height:30px;font-size:11px}
+.touch .stick{width:100px;height:100px;bottom:10px}.touch #sl{left:10px}.touch #sr{right:10px}.touch .stick i{left:30px;top:30px;width:36px;height:36px}.touch .stick span{font-size:9px;top:-14px}
+.touch #hotbar{bottom:8px;right:auto;left:50%;transform:translateX(-50%);display:flex;flex-wrap:nowrap;gap:4px;max-width:calc(100vw - 300px)}.touch #hotbar button{white-space:nowrap}@media (orientation:portrait){.touch #hotbar{flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 24px);bottom:calc(46vw + 8px)}.touch #radio{bottom:calc(46vw + 100px);width:calc(100vw - 24px)}}
+.touch #hotbar button{min-width:0;min-height:38px;padding:3px 8px;font-size:10.5px;border-radius:7px}
+.touch #toast{top:auto;bottom:118px;font-size:11.5px;padding:5px 10px;max-width:min(380px,70vw)}
+}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/cinzel-latin-500-normal.woff2) format('woff2')}@font-face{font-family:'Cinzel';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/cinzel-latin-700-normal.woff2) format('woff2')}@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:400;font-display:swap;src:url(fonts/cormorant-garamond-latin-400-italic.woff2) format('woff2')}#screen-splash{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:#000;cursor:pointer}
+#screen-splash.gone{display:none}
+#screen-splash .logo-wrap{text-align:center;opacity:0;transition:opacity 1.4s ease, filter 1.6s ease;filter:brightness(1.6)}
+#screen-splash.in .logo-wrap{opacity:1;filter:brightness(1)}
+#screen-splash.out .logo-wrap{opacity:0;filter:brightness(.2);transition:opacity 1.5s ease, filter 1.5s ease}
+#logo-seal{width:min(300px,52vw,40vh);display:block;margin:0 auto;filter:drop-shadow(0 0 28px rgba(255,140,80,.45)) drop-shadow(0 6px 10px rgba(0,0,0,.8))}
+#screen-splash.in #logo-seal{animation:sealglow 4.2s ease-in-out forwards}
+@keyframes sealglow{0%{filter:brightness(1.25) drop-shadow(0 0 40px rgba(255,160,90,.7))}55%{filter:brightness(1) drop-shadow(0 0 26px rgba(255,140,80,.45))}
+  62%{filter:brightness(.55) drop-shadow(0 0 6px rgba(255,140,80,.15))}66%{filter:brightness(1) drop-shadow(0 0 24px rgba(255,140,80,.45))}
+  100%{filter:brightness(.85) drop-shadow(0 0 18px rgba(255,130,70,.3))}}
+#screen-splash .logo-name{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(26px,5vw,44px);letter-spacing:.14em;color:#efe4d0;margin-top:22px;text-shadow:0 0 18px rgba(255,210,150,.35)}
+#screen-splash .logo-sub{font-family:'Cinzel',serif;font-weight:500;font-size:clamp(14px,2.4vw,20px);letter-spacing:.6em;color:#c0473a;margin-top:6px;padding-left:.6em}
+#screen-splash .logo-motto{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,2.4vw,21px);color:#9a8e7c;margin-top:12px}
+#screen-splash .presents{margin-top:26px;font-family:'Cinzel',serif;font-size:15px;letter-spacing:.5em;color:#7c7062;opacity:0;transition:opacity 1.2s}
+#screen-splash.show-presents .presents{opacity:1}
+@media (max-height:500px){#screen-splash .logo-name{margin-top:8px}#logo-seal{width:min(160px,34vh)}#screen-splash .presents{margin-top:10px}}
+@font-face{font-family:'VT323';font-weight:400;font-display:swap;src:url(fonts/vt323-latin-400-normal.woff2) format('woff2')}@font-face{font-family:'Barlow Condensed';font-weight:700;font-display:swap;src:url(fonts/barlow-condensed-latin-700-normal.woff2) format('woff2')}
+#ck2{position:fixed;left:0;top:0;pointer-events:none;z-index:4;image-rendering:auto}
+.ck2 #hud .tl,.ck2 #hud .tr,.ck2 #radio,.ck2 #panel,.ck2 #hotbar{display:none!important}
+.ctrlTop{display:block;width:100%;margin:0 0 14px;font-size:16px}
+</style></head><body>
+<div id="game"></div>
+<div id="cockpit"></div>
+<div id="hud" hidden>
+ <div class="pn tl"><div id="money">R$ 0</div><div class="sub" id="rank"></div><div class="rb"><i id="repBar"></i></div><div class="sub" id="heliName"></div><div class="sub" id="clock"></div><div id="seats"></div><div id="gmini"></div><div id="svc"></div></div>
+ <div class="pn mission"><div id="mTitle">Sem missão</div><div id="mDesc"></div><div class="bar"><i id="mBar"></i></div>
+  <div class="nav"><svg id="arrow" viewBox="0 0 24 24"><path d="M12 2l8 18-8-4-8 4z" fill="#ffcc1f"/></svg><span id="mDist"></span><span id="mTime"></span></div></div>
+ <div class="pn tr"><canvas id="mini" width="180" height="180"></canvas></div>
+ <div class="pn" id="radio"><h4 id="radioH">Rádio</h4><div id="radioLog"></div><div id="offerBtns" hidden><button id="acc">Aceitar</button><button id="dec">×</button></div></div>
+ <canvas id="panel" width="640" height="124"></canvas>
+ <div id="hotbar">
+  <button data-act="Space"><kbd>Espaço</kbd>.</button><button data-act="KeyL"><kbd>L</kbd>.</button>
+  <button data-act="KeyG"><kbd>G</kbd>.</button><button data-act="KeyK"><kbd>K</kbd>.</button>
+  <button data-act="KeyV"><kbd>V</kbd>.</button><button data-act="KeyI"><kbd>I</kbd>.</button>
+  <button data-act="KeyC"><kbd>C</kbd>.</button><button data-act="KeyH"><kbd>H</kbd>.</button>
+  <button data-act="KeyE"><kbd>E</kbd>.</button><button data-act="KeyP"><kbd>P</kbd>.</button>
+  <button data-act="Enter"><kbd>Enter</kbd>.</button>
+ </div>
+ <div class="stick" id="sl"><span id="slL"></span><i></i></div>
+ <div class="stick" id="sr"><span id="srL"></span><i></i></div>
+ <div id="mobTop"><button data-act="KeyP" aria-label="Pause"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M8 5v14M16 5v14"/></svg></button>
+  <button data-act="KeyC" aria-label="Camera"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="3" y="7" width="13" height="10" rx="2"/><path d="M16 11l5-3v8l-5-3z"/></svg></button></div>
+ <div id="toast"></div>
+</div>
+<div id="rotHint" hidden><svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="#fff" stroke-width="1.6"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/><path d="M20 9a8 8 0 0 1 0 6" stroke="#ffcc1f"/></svg><p id="rotTxt"></p><button class="go" id="rotBtn"></button></div>
+<div id="screen-splash">
+  <div class="logo-wrap">
+    <img id="logo-seal" src="img/logo-seal.png" alt="In Hoc Signo Ludimus seal">
+    <div class="logo-name">IN HOC SIGNO</div>
+    <div class="logo-sub">LUDIMUS</div>
+    <div class="logo-motto">neste sinal, jogamos</div>
+    <div class="presents">presents</div>
+  </div>
+</div>
+<script>(function(){ const sp=document.getElementById('screen-splash'); let done=false;
+  const end=()=>{ if(done) return; done=true; sp.classList.add('gone'); };
+  sp.querySelector('.presents').textContent=(localStorage.getItem('ar.lang')==='pt')?'apresenta':'presents';
+  // só começa depois que o jogo terminou de carregar (senão o celular "pula" a abertura enquanto carrega)
+  const run=()=>{ if(done) return; requestAnimationFrame(()=>requestAnimationFrame(()=>sp.classList.add('in')));
+    setTimeout(()=>sp.classList.add('show-presents'),2200); setTimeout(()=>sp.classList.add('out'),5200); setTimeout(end,6900); };
+  if(document.readyState==='complete') setTimeout(run,60); else addEventListener('load',()=>setTimeout(run,60));
+  sp.addEventListener('pointerdown',end);
+  try { if (sessionStorage.getItem('ar.skipSplash')) { sessionStorage.removeItem('ar.skipSplash'); end(); } } catch (e) {} })();</script>
+<div id="title"><div class="tsbg"></div><div class="ts" id="ts"><img src="img/title.jpg" alt="SOS Copter" draggable="false"><div id="tsBtns"></div><div id="tsLoad">LOADING…</div></div>
+ <div class="tsCorner" id="tsCorner"></div></div>
+<div id="ov" hidden><div class="card" id="card"></div></div>
+<script src="lib/three.min.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/city-recife.js"></script>
+<script src="js/city-miami.js"></script>
+<script src="models/kenney.js"></script>
+<script src="js/models.js"></script>
+<script src="js/sc2.js"></script>
+<script src="js/maps/level1_01.js"></script>
+<script src="js/maps/level1_02.js"></script>
+<script src="js/maps/level1_03.js"></script>
+<script src="js/maps/level2_01.js"></script>
+<script src="js/maps/level2_02.js"></script>
+<script src="js/maps/level2_03.js"></script>
+<script src="js/maps/level3_01.js"></script>
+<script src="js/maps/level3_02.js"></script>
+<script src="js/city-sc2.js"></script>
+<script src="js/core.js"></script>
+<script src="js/scene.js"></script>
+<script src="js/heli.js"></script>
+<script src="js/world.js"></script>
+<script src="js/missions.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/story.js"></script>
+<script src="js/onfoot.js"></script>
+<script src="js/sounds.js"></script>
+<script src="js/input.js"></script>
+<script src="js/music.js"></script>
+<script>if (!matchMedia('(pointer:coarse)').matches) document.write('<script src="js/hud-pack.js"><\/script>');</script>
+<script src="js/cockpit.js"></script>
+<script src="js/main.js"></script>
+<script>if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
+</body></html>
